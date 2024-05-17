@@ -1,0 +1,10 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <include file="/db/changelog/scripts/01-creating-banks-table.sql"/>
+    <include file="/db/changelog/scripts/02-creating-accounts-table.sql"/>
+    <include file="/db/changelog/scripts/03-creating-transactions-table.sql"/>
+
+</databaseChangeLog>
