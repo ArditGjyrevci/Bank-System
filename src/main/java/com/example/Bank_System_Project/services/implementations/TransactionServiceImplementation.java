@@ -1,19 +1,31 @@
 package com.example.Bank_System_Project.services.implementations;
 
+import com.example.Bank_System_Project.daos.BankRepository;
 import com.example.Bank_System_Project.daos.TransactionRepository;
+import com.example.Bank_System_Project.entities.Account;
+import com.example.Bank_System_Project.entities.Bank;
 import com.example.Bank_System_Project.entities.Transaction;
+import com.example.Bank_System_Project.services.interfaces.AccountService;
+import com.example.Bank_System_Project.services.interfaces.BankService;
 import com.example.Bank_System_Project.services.interfaces.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class TransactionServiceImplementation implements TransactionService {
     private TransactionRepository transactionRepository;
+    private AccountService accountService;
+    private BankService bankService;
     @Autowired
-    public TransactionServiceImplementation (TransactionRepository transactionRepository)
+    public TransactionServiceImplementation (TransactionRepository transactionRepository, AccountService accountService, BankService bankService)
     {
         this.transactionRepository=transactionRepository;
+        this.accountService=accountService;
+        this.bankService=bankService;
     }
     @Override
     public Transaction save(Transaction transaction) {
@@ -32,6 +44,35 @@ public class TransactionServiceImplementation implements TransactionService {
         return transaction;
     }
 
+    @Override
+    public void performTransaction(Transaction transaction, boolean isFlatFee) throws Exception {
+        Account originatingAccount = accountService.findById(transaction.getOriginatingAccount().getAccountId());
+        Account resultingAccount = accountService.findById(transaction.getResultingAccount().getAccountId());
+
+        if (originatingAccount == null || resultingAccount == null) {
+            throw new IllegalArgumentException("Invalid account ID(s).");
+        }
+
+        BigDecimal amount=transaction.getAmount();
+
+        if (originatingAccount.getAccountBalance().compareTo(amount) < 0) {
+            throw new IllegalArgumentException("Insufficient balance in the originating account.");
+        }
+
+        BigDecimal transactionFee = isFlatFee ? originatingAccount.getBank().getTransactionFlatFeeAmount() :
+                amount.multiply(originatingAccount.getBank().getTransactionPercentFeeValue().divide(BigDecimal.valueOf(100)));
+
+        originatingAccount.setAccountBalance(originatingAccount.getAccountBalance().subtract(amount).subtract(transactionFee));
+        resultingAccount.setAccountBalance(resultingAccount.getAccountBalance().add(amount));
+
+        Bank bank = originatingAccount.getBank();
+        bankService.updateTransactionAmounts(bank.getBankId(), transactionFee, amount);
+
+        accountService.save(originatingAccount);
+        accountService.save(resultingAccount);
+
+
+    }
     @Override
     public List<Transaction> findAll() {
         return transactionRepository.findAll();

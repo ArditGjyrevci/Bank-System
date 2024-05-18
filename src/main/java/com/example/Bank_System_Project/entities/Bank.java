@@ -23,10 +23,10 @@ public class Bank {
     private BigDecimal totalTransferAmount=BigDecimal.ZERO;
 
     @Column(name = "transaction_flat_fee_amount")
-    private Double transactionFlatFeeAmount;
+    private BigDecimal transactionFlatFeeAmount;
 
     @Column(name = "transaction_percent_fee_value")
-    private Double transactionPercentFeeValue;
+    private BigDecimal transactionPercentFeeValue;
     @OneToMany(mappedBy = "bank")
     @JsonManagedReference
     private List<Account> accounts;
@@ -34,7 +34,7 @@ public class Bank {
     public Bank() {
     }
 
-    public Bank(String bankName, Double transactionFlatFeeAmount, Double transactionPercentFeeValue) {
+    public Bank(String bankName, BigDecimal transactionFlatFeeAmount, BigDecimal transactionPercentFeeValue) {
         this.bankName = bankName;
         this.transactionFlatFeeAmount = transactionFlatFeeAmount;
         this.transactionPercentFeeValue = transactionPercentFeeValue;
@@ -72,19 +72,19 @@ public class Bank {
         this.totalTransferAmount = totalTransferAmount;
     }
 
-    public Double getTransactionFlatFeeAmount() {
+    public BigDecimal getTransactionFlatFeeAmount() {
         return transactionFlatFeeAmount;
     }
 
-    public void setTransactionFlatFeeAmount(Double transactionFlatFeeAmount) {
+    public void setTransactionFlatFeeAmount(BigDecimal transactionFlatFeeAmount) {
         this.transactionFlatFeeAmount = transactionFlatFeeAmount;
     }
 
-    public Double getTransactionPercentFeeValue() {
+    public BigDecimal getTransactionPercentFeeValue() {
         return transactionPercentFeeValue;
     }
 
-    public void setTransactionPercentFeeValue(Double transactionPercentFeeValue) {
+    public void setTransactionPercentFeeValue(BigDecimal transactionPercentFeeValue) {
         this.transactionPercentFeeValue = transactionPercentFeeValue;
     }
 

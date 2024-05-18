@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import org.springframework.cglib.core.Local;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -15,7 +16,7 @@ public class Transaction {
     @Column(name = "transaction_id")
     private Integer transactionId;
     @Column(name = "amount")
-    private Double amount;
+    private BigDecimal amount;
     @ManyToOne
     @JoinColumn(name = "originating_account_id")
     @JsonBackReference
@@ -25,14 +26,14 @@ public class Transaction {
     @JsonBackReference
     private Account resultingAccount;
     @Column(name = "transaction_reason")
-    private Integer transactionReason;
+    private String transactionReason;
     @Column(name = "transaction_date")
     private LocalDateTime transactionDate;
 
     public Transaction() {
     }
 
-    public Transaction(Double amount, Integer transactionReason, LocalDateTime transactionDate) {
+    public Transaction(BigDecimal amount, String transactionReason, LocalDateTime transactionDate) {
         this.amount = amount;
         this.transactionReason = transactionReason;
         this.transactionDate = transactionDate;
@@ -46,11 +47,11 @@ public class Transaction {
         this.transactionId = transactionId;
     }
 
-    public Double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
@@ -70,11 +71,11 @@ public class Transaction {
         this.resultingAccount = resultingAccount;
     }
 
-    public Integer getTransactionReason() {
+    public String getTransactionReason() {
         return transactionReason;
     }
 
-    public void setTransactionReason(Integer transactionReason) {
+    public void setTransactionReason(String transactionReason) {
         this.transactionReason = transactionReason;
     }
 

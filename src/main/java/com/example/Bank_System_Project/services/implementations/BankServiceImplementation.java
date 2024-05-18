@@ -6,6 +6,7 @@ import com.example.Bank_System_Project.services.interfaces.BankService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +22,11 @@ public class BankServiceImplementation implements BankService {
     @Override
     public Bank save(Bank bank) {
         return bankRepository.save(bank);
+    }
+
+    @Override
+    public void updateTransactionAmounts(int bankId, BigDecimal transactionFee, BigDecimal transferAmount) {
+        bankRepository.updateTransactionAmounts(bankId, transactionFee, transferAmount);
     }
 
     @Override

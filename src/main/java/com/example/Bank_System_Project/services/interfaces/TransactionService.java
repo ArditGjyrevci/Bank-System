@@ -9,5 +9,6 @@ public interface TransactionService {
     Transaction findById(Integer id);
     List<Transaction> findAll();
     void deleteById(Integer id);
+    public void performTransaction(Transaction transaction, boolean isFlatFee) throws Exception;
 
 }

@@ -2,13 +2,16 @@ package com.example.Bank_System_Project;
 
 import com.example.Bank_System_Project.entities.Account;
 import com.example.Bank_System_Project.entities.Bank;
+import com.example.Bank_System_Project.entities.Transaction;
 import com.example.Bank_System_Project.services.interfaces.AccountService;
 import com.example.Bank_System_Project.services.interfaces.BankService;
+import com.example.Bank_System_Project.services.interfaces.TransactionService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -19,9 +22,11 @@ public class BankSystemProjectApplication implements CommandLineRunner {
 	private final BankService bankService;
 	private final AccountService accountService;
 
-	public BankSystemProjectApplication(BankService bankService, AccountService accountService) {
+	private final TransactionService transactionService;
+	public BankSystemProjectApplication(BankService bankService, AccountService accountService,TransactionService transactionService) {
 		this.bankService = bankService;
 		this.accountService=accountService;
+		this.transactionService=transactionService;
 	}
 
 	public static void main(String[] args) {
@@ -62,6 +67,7 @@ public class BankSystemProjectApplication implements CommandLineRunner {
 		while (!exit) {
 			System.out.println("\nOptions:");
 			System.out.println("1. Create an account");
+			System.out.println("2. Perform transaction");
 			System.out.println("0. Exit");
 			System.out.print("Select an option: ");
 			int option = scanner.nextInt();
@@ -70,6 +76,9 @@ public class BankSystemProjectApplication implements CommandLineRunner {
 			switch (option) {
 				case 1:
 					createAccount(scanner);
+					break;
+				case 2:
+					performTransaction(scanner);
 					break;
 				case 0:
 					exit = true;
@@ -80,6 +89,7 @@ public class BankSystemProjectApplication implements CommandLineRunner {
 		}
 		scanner.close();
 		System.out.println("Thank you for using the Bank Console App.");
+
 	}
 
 	private void createBank(Scanner scanner) {
@@ -87,14 +97,15 @@ public class BankSystemProjectApplication implements CommandLineRunner {
 		String bankName = scanner.nextLine();
 
 		System.out.print("Enter transaction flat fee amount: ");
-		Double flatFee = scanner.nextDouble();
+		BigDecimal flatFee = scanner.nextBigDecimal();
 
 		System.out.print("Enter transaction percent fee value: ");
-		Double percentFee = scanner.nextDouble();
+		BigDecimal percentFee = scanner.nextBigDecimal();
 
 		Bank bank = new Bank(bankName, flatFee, percentFee);
 		bankService.save(bank);
 		System.out.println("Bank created successfully.");
+		selectExistingBank(scanner);
 	}
 
 	private boolean selectExistingBank(Scanner scanner) {
@@ -138,5 +149,30 @@ public class BankSystemProjectApplication implements CommandLineRunner {
 		account.setBank(currentBank);
 		accountService.save(account);
 		System.out.println("Account created successfully!");
+	}
+	private void performTransaction(Scanner scanner) {
+		try {
+			System.out.print("Enter originating account ID: ");
+			int originatingAccountId = scanner.nextInt();
+			System.out.print("Enter resulting account ID: ");
+			int resultingAccountId = scanner.nextInt();
+			System.out.print("Enter amount: ");
+			BigDecimal amount = scanner.nextBigDecimal();
+			scanner.nextLine(); // Consume newline
+			System.out.print("Enter transaction reason: ");
+			String reason = scanner.nextLine();
+			System.out.print("Is this a flat fee transaction? (true/false): ");
+			LocalDateTime transactionDate = LocalDateTime.now();
+			boolean isFlatFee = scanner.nextBoolean();
+			Transaction transaction= new Transaction(amount,reason,transactionDate);
+			transaction.setOriginatingAccount(accountService.findById(originatingAccountId));
+			transaction.setResultingAccount(accountService.findById(resultingAccountId));
+			transactionService.performTransaction(transaction, isFlatFee);
+			transactionService.save(transaction);
+			System.out.println("Transaction completed successfully.");
+
+		} catch (Exception e) {
+			System.out.println("Error: " + e.getMessage());
+		}
 	}
 }

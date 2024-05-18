@@ -12,6 +12,7 @@ import java.util.Optional;
 @Service
 public class AccountServiceImplementation implements AccountService {
     private AccountRepository accountRepository;
+    private Account currentAccount;
     @Autowired
     public AccountServiceImplementation(AccountRepository accountRepository)
     {
@@ -42,6 +43,11 @@ public class AccountServiceImplementation implements AccountService {
     @Override
     public void deleteById(Integer id) {
         accountRepository.deleteById(id);
+    }
+
+    @Override
+    public Account getCurrentAccount() {
+        return currentAccount;
     }
 
 }
