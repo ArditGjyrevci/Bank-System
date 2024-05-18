@@ -1,22 +1,29 @@
 package com.example.Bank_System_Project.services.implementations;
 
 import com.example.Bank_System_Project.daos.AccountRepository;
+import com.example.Bank_System_Project.daos.BankRepository;
 import com.example.Bank_System_Project.entities.Account;
+import com.example.Bank_System_Project.entities.Bank;
+import com.example.Bank_System_Project.entities.Transaction;
 import com.example.Bank_System_Project.services.interfaces.AccountService;
+import com.example.Bank_System_Project.services.interfaces.BankService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class AccountServiceImplementation implements AccountService {
     private AccountRepository accountRepository;
+    private BankRepository bankRepository;
     private Account currentAccount;
     @Autowired
-    public AccountServiceImplementation(AccountRepository accountRepository)
+    public AccountServiceImplementation(AccountRepository accountRepository, BankRepository bankRepository)
     {
         this.accountRepository=accountRepository;
+        this.bankRepository=bankRepository;
     }
     @Override
     public Account save(Account account) {
@@ -50,4 +57,47 @@ public class AccountServiceImplementation implements AccountService {
         return currentAccount;
     }
 
+    @Override
+    public void withdraw(int accountId, BigDecimal amount, boolean isFlatFee) {
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new IllegalArgumentException("Account not found"));
+
+        Bank bank=new Bank();
+
+
+        BigDecimal fee = isFlatFee ? account.getBank().getTransactionFlatFeeAmount() :
+                amount.multiply(account.getBank().getTransactionPercentFeeValue().divide(BigDecimal.valueOf(100)));
+        BigDecimal totalAmount = amount.add(fee);
+
+        if (account.getAccountBalance().compareTo(totalAmount) < 0) {
+            throw new IllegalArgumentException("Insufficient funds");
+        }
+
+        account.setAccountBalance(account.getAccountBalance().subtract(totalAmount));
+        accountRepository.save(account);
+
+        bankRepository.updateTransactionAmounts(account.getBank().getBankId(), fee, amount);
+    }
+
+    @Override
+    public void deposit(int accountId, BigDecimal amount, boolean isFlatFee) {
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new IllegalArgumentException("Account not found"));
+
+        Bank bank=new Bank();
+
+        BigDecimal fee = isFlatFee ? account.getBank().getTransactionFlatFeeAmount() :
+                amount.multiply(account.getBank().getTransactionPercentFeeValue().divide(BigDecimal.valueOf(100)));
+
+        BigDecimal totalAmount = amount.subtract(fee);
+
+        if (account.getAccountBalance().compareTo(totalAmount) < 0) {
+            throw new IllegalArgumentException("Insufficient funds");
+        }
+
+        account.setAccountBalance(account.getAccountBalance().add(totalAmount));
+        accountRepository.save(account);
+
+        bankRepository.updateTransactionAmounts(account.getBank().getBankId(), fee, amount);
+    }
 }

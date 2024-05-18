@@ -38,36 +38,15 @@ public class BankSystemProjectApplication implements CommandLineRunner {
 		Scanner scanner = new Scanner(System.in);
 		System.out.println("Welcome to the Bank Console App");
 
-		boolean bankSelected = false;
-
-		while (!bankSelected) {
-			System.out.println("\nOptions:");
-			System.out.println("1. Create a new bank");
-			System.out.println("2. Use an existing bank");
-			System.out.print("Select an option: ");
-			int option = scanner.nextInt();
-			scanner.nextLine(); // Consume newline
-
-			switch (option) {
-				case 1:
-					createBank(scanner);
-					bankSelected = true;
-					break;
-				case 2:
-					if (selectExistingBank(scanner)) {
-						bankSelected = true;
-					}
-					break;
-				default:
-					System.out.println("Invalid option. Please try again.");
-			}
-		}
-
 		boolean exit = false;
 		while (!exit) {
 			System.out.println("\nOptions:");
-			System.out.println("1. Create an account");
-			System.out.println("2. Perform transaction");
+			System.out.println("1. Create a new bank");
+			System.out.println("2. Create an account");
+			System.out.println("3. Perform transaction");
+			System.out.println("4. Perform withdraw");
+			System.out.println("5. Deposit money");
+			System.out.println("6. List transactions by account id");
 			System.out.println("0. Exit");
 			System.out.print("Select an option: ");
 			int option = scanner.nextInt();
@@ -75,10 +54,22 @@ public class BankSystemProjectApplication implements CommandLineRunner {
 
 			switch (option) {
 				case 1:
-					createAccount(scanner);
+					createBank(scanner);
 					break;
 				case 2:
+					createAccount(scanner);
+					break;
+				case 3:
 					performTransaction(scanner);
+					break;
+				case 4:
+					withdrawMoney(scanner);
+					break;
+				case 5:
+					depositMoney(scanner);
+					break;
+				case 6:
+					listTransactions(scanner);
 					break;
 				case 0:
 					exit = true;
@@ -105,7 +96,6 @@ public class BankSystemProjectApplication implements CommandLineRunner {
 		Bank bank = new Bank(bankName, flatFee, percentFee);
 		bankService.save(bank);
 		System.out.println("Bank created successfully.");
-		selectExistingBank(scanner);
 	}
 
 	private boolean selectExistingBank(Scanner scanner) {
@@ -115,7 +105,7 @@ public class BankSystemProjectApplication implements CommandLineRunner {
 			return false;
 		}
 
-		System.out.println("Select a bank from the list:");
+		System.out.println("Select a bank from the list where you want to create account:");
 		for (Bank bank : banks) {
 			System.out.println("ID: "+ bank.getBankId() + " Name: " + bank.getBankName());
 		}
@@ -136,6 +126,7 @@ public class BankSystemProjectApplication implements CommandLineRunner {
 	}
 
 	private void createAccount(Scanner scanner) {
+		selectExistingBank(scanner);
 		Bank currentBank = bankService.getCurrentBank();
 		if (currentBank == null) {
 			System.out.println("Error: No bank selected. Please select or create a bank first.");
@@ -162,8 +153,8 @@ public class BankSystemProjectApplication implements CommandLineRunner {
 			System.out.print("Enter transaction reason: ");
 			String reason = scanner.nextLine();
 			System.out.print("Is this a flat fee transaction? (true/false): ");
-			LocalDateTime transactionDate = LocalDateTime.now();
 			boolean isFlatFee = scanner.nextBoolean();
+			LocalDateTime transactionDate = LocalDateTime.now();
 			Transaction transaction= new Transaction(amount,reason,transactionDate);
 			transaction.setOriginatingAccount(accountService.findById(originatingAccountId));
 			transaction.setResultingAccount(accountService.findById(resultingAccountId));
@@ -171,6 +162,43 @@ public class BankSystemProjectApplication implements CommandLineRunner {
 			transactionService.save(transaction);
 			System.out.println("Transaction completed successfully.");
 
+		} catch (Exception e) {
+			System.out.println("Error: " + e.getMessage());
+		}
+	}
+	private void withdrawMoney(Scanner scanner) {
+		try {
+			System.out.print("Enter account ID: ");
+			int accountId = scanner.nextInt();
+			System.out.print("Enter amount: ");
+			BigDecimal amount = scanner.nextBigDecimal();
+			System.out.print("Is this a flat fee withdrawal? (true/false): ");
+			boolean isFlatFee = scanner.nextBoolean();
+			accountService.withdraw(accountId, amount, isFlatFee);
+			System.out.println("Withdrawal completed successfully.");
+		} catch (Exception e) {
+			System.out.println("Error: " + e.getMessage());
+		}
+	}
+	private void depositMoney(Scanner scanner) {
+		try {
+			System.out.print("Enter account ID: ");
+			int accountId = scanner.nextInt();
+			System.out.print("Enter amount you want to deposit: ");
+			BigDecimal amount = scanner.nextBigDecimal();
+			System.out.print("Is this a flat fee deposit? (true/false): ");
+			boolean isFlatFee = scanner.nextBoolean();
+			accountService.deposit(accountId, amount, isFlatFee);
+			System.out.println("Deposit completed successfully.");
+		} catch (Exception e) {
+			System.out.println("Error: " + e.getMessage());
+		}
+	}
+	private void listTransactions(Scanner scanner) {
+		try {
+			System.out.print("Enter account ID: ");
+			int accountId = scanner.nextInt();
+			transactionService.findByAccountId(accountId);
 		} catch (Exception e) {
 			System.out.println("Error: " + e.getMessage());
 		}

@@ -1,6 +1,5 @@
 package com.example.Bank_System_Project.services.implementations;
 
-import com.example.Bank_System_Project.daos.BankRepository;
 import com.example.Bank_System_Project.daos.TransactionRepository;
 import com.example.Bank_System_Project.entities.Account;
 import com.example.Bank_System_Project.entities.Bank;
@@ -12,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -76,6 +76,20 @@ public class TransactionServiceImplementation implements TransactionService {
     @Override
     public List<Transaction> findAll() {
         return transactionRepository.findAll();
+    }
+
+    @Override
+    public List<Transaction> findByAccountId(Integer accountId) {
+        Account account = accountService.findById(accountId);
+        if (account == null ) {
+            throw new IllegalArgumentException("Invalid account ID(s).");
+        }
+        List<Transaction>transactions=findAll();
+        for (Transaction transaction : transactions) {
+            if(transaction.getResultingAccount().getAccountId()==accountId||transaction.getOriginatingAccount().getAccountId()==accountId)
+            System.out.println(transaction);
+        }
+        return transactions;
     }
 
     @Override

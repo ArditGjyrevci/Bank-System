@@ -92,7 +92,9 @@ public class Transaction {
         return "Transaction{" +
                 "transactionId=" + transactionId +
                 ", amount=" + amount +
-                ", transactionReason=" + transactionReason +
+                ", originatingAccount=" + originatingAccount +
+                ", resultingAccount=" + resultingAccount +
+                ", transactionReason='" + transactionReason + '\'' +
                 ", transactionDate=" + transactionDate +
                 '}';
     }
