@@ -104,4 +104,15 @@ public class Bank {
         account.setBank(this);
     }
 
+    @Override
+    public String toString() {
+        return "Bank{" +
+                "bankId=" + bankId +
+                ", bankName='" + bankName + '\'' +
+                ", totalTransactionFeeAmount=" + totalTransactionFeeAmount +
+                ", totalTransferAmount=" + totalTransferAmount +
+                ", TransactionFlatFeeAmount=" + TransactionFlatFeeAmount +
+                ", TransactionPercentFeeValue=" + TransactionPercentFeeValue +
+                '}';
+    }
 }
