@@ -3,6 +3,7 @@ package com.example.Bank_System_Project.entities;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,16 +17,16 @@ public class Bank {
     @Column(name = "bank_name")
     private String bankName;
     @Column(name = "total_transaction_fee_amount")
-    private Double totalTransactionFeeAmount;
+    private BigDecimal totalTransactionFeeAmount=BigDecimal.ZERO;
 
     @Column(name = "total_transfer_amount")
-    private Double totalTransferAmount;
+    private BigDecimal totalTransferAmount=BigDecimal.ZERO;
 
     @Column(name = "transaction_flat_fee_amount")
-    private Double TransactionFlatFeeAmount;
+    private Double transactionFlatFeeAmount;
 
     @Column(name = "transaction_percent_fee_value")
-    private Double TransactionPercentFeeValue;
+    private Double transactionPercentFeeValue;
     @OneToMany(mappedBy = "bank")
     @JsonManagedReference
     private List<Account> accounts;
@@ -33,12 +34,10 @@ public class Bank {
     public Bank() {
     }
 
-    public Bank(String bankName, Double totalTransactionFeeAmount, Double totalTransferAmount, Double transactionFlatFeeAmount, Double transactionPercentFeeValue) {
+    public Bank(String bankName, Double transactionFlatFeeAmount, Double transactionPercentFeeValue) {
         this.bankName = bankName;
-        this.totalTransactionFeeAmount = totalTransactionFeeAmount;
-        this.totalTransferAmount = totalTransferAmount;
-        TransactionFlatFeeAmount = transactionFlatFeeAmount;
-        TransactionPercentFeeValue = transactionPercentFeeValue;
+        this.transactionFlatFeeAmount = transactionFlatFeeAmount;
+        this.transactionPercentFeeValue = transactionPercentFeeValue;
     }
 
     public Integer getBankId() {
@@ -57,41 +56,42 @@ public class Bank {
         this.bankName = bankName;
     }
 
-    public Double getTotalTransactionFeeAmount() {
+    public BigDecimal getTotalTransactionFeeAmount() {
         return totalTransactionFeeAmount;
     }
 
-    public void setTotalTransactionFeeAmount(Double totalTransactionFeeAmount) {
+    public void setTotalTransactionFeeAmount(BigDecimal totalTransactionFeeAmount) {
         this.totalTransactionFeeAmount = totalTransactionFeeAmount;
     }
 
-    public Double getTotalTransferAmount() {
+    public BigDecimal getTotalTransferAmount() {
         return totalTransferAmount;
     }
 
-    public void setTotalTransferAmount(Double totalTransferAmount) {
+    public void setTotalTransferAmount(BigDecimal totalTransferAmount) {
         this.totalTransferAmount = totalTransferAmount;
     }
 
     public Double getTransactionFlatFeeAmount() {
-        return TransactionFlatFeeAmount;
+        return transactionFlatFeeAmount;
     }
 
     public void setTransactionFlatFeeAmount(Double transactionFlatFeeAmount) {
-        TransactionFlatFeeAmount = transactionFlatFeeAmount;
+        this.transactionFlatFeeAmount = transactionFlatFeeAmount;
     }
 
     public Double getTransactionPercentFeeValue() {
-        return TransactionPercentFeeValue;
+        return transactionPercentFeeValue;
     }
 
     public void setTransactionPercentFeeValue(Double transactionPercentFeeValue) {
-        TransactionPercentFeeValue = transactionPercentFeeValue;
+        this.transactionPercentFeeValue = transactionPercentFeeValue;
     }
 
     public List<Account> getAccounts() {
         return accounts;
     }
+
     public void setAccounts(List<Account> accounts) {
         this.accounts = accounts;
     }
@@ -111,8 +111,8 @@ public class Bank {
                 ", bankName='" + bankName + '\'' +
                 ", totalTransactionFeeAmount=" + totalTransactionFeeAmount +
                 ", totalTransferAmount=" + totalTransferAmount +
-                ", TransactionFlatFeeAmount=" + TransactionFlatFeeAmount +
-                ", TransactionPercentFeeValue=" + TransactionPercentFeeValue +
+                ", TransactionFlatFeeAmount=" + transactionFlatFeeAmount +
+                ", TransactionPercentFeeValue=" + transactionPercentFeeValue +
                 '}';
     }
 }
