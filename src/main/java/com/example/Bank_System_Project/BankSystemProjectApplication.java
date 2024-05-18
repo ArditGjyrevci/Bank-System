@@ -1,14 +1,12 @@
 package com.example.Bank_System_Project;
 
+import com.example.Bank_System_Project.entities.Account;
 import com.example.Bank_System_Project.entities.Bank;
+import com.example.Bank_System_Project.services.interfaces.AccountService;
 import com.example.Bank_System_Project.services.interfaces.BankService;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -19,9 +17,11 @@ import java.util.Scanner;
 public class BankSystemProjectApplication implements CommandLineRunner {
 
 	private final BankService bankService;
+	private final AccountService accountService;
 
-	public BankSystemProjectApplication(BankService bankService) {
+	public BankSystemProjectApplication(BankService bankService, AccountService accountService) {
 		this.bankService = bankService;
+		this.accountService=accountService;
 	}
 
 	public static void main(String[] args) {
@@ -58,7 +58,28 @@ public class BankSystemProjectApplication implements CommandLineRunner {
 			}
 		}
 
+		boolean exit = false;
+		while (!exit) {
+			System.out.println("\nOptions:");
+			System.out.println("1. Create an account");
+			System.out.println("0. Exit");
+			System.out.print("Select an option: ");
+			int option = scanner.nextInt();
+			scanner.nextLine(); // Consume newline
 
+			switch (option) {
+				case 1:
+					createAccount(scanner);
+					break;
+				case 0:
+					exit = true;
+					break;
+				default:
+					System.out.println("Invalid option. Please try again.");
+			}
+		}
+		scanner.close();
+		System.out.println("Thank you for using the Bank Console App.");
 	}
 
 	private void createBank(Scanner scanner) {
@@ -101,5 +122,21 @@ public class BankSystemProjectApplication implements CommandLineRunner {
 			System.out.println("Invalid bank ID. Please try again.");
 			return false;
 		}
+	}
+
+	private void createAccount(Scanner scanner) {
+		Bank currentBank = bankService.getCurrentBank();
+		if (currentBank == null) {
+			System.out.println("Error: No bank selected. Please select or create a bank first.");
+			return;
+		}
+		System.out.print("Enter username: ");
+		String username = scanner.nextLine();
+		System.out.print("Enter initial balance: ");
+		BigDecimal initialBalance = scanner.nextBigDecimal();
+		Account account = new Account(username, initialBalance);
+		account.setBank(currentBank);
+		accountService.save(account);
+		System.out.println("Account created successfully!");
 	}
 }

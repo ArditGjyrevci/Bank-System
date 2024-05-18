@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +18,7 @@ public class Account {
     @Column(name = "user_name")
     private String username;
     @Column(name = "account_balance")
-    private Double accountBalance;
+    private BigDecimal accountBalance;
     @ManyToOne
     @JoinColumn(name = "bank_id")
     @JsonBackReference
@@ -35,7 +36,7 @@ public class Account {
 
     }
 
-    public Account(String username, Double accountBalance) {
+    public Account(String username, BigDecimal accountBalance) {
         this.username = username;
         this.accountBalance = accountBalance;
     }
@@ -56,11 +57,11 @@ public class Account {
         this.username = username;
     }
 
-    public Double getAccountBalance() {
+    public BigDecimal getAccountBalance() {
         return accountBalance;
     }
 
-    public void setAccountBalance(Double accountBalance) {
+    public void setAccountBalance(BigDecimal accountBalance) {
         this.accountBalance = accountBalance;
     }
 
