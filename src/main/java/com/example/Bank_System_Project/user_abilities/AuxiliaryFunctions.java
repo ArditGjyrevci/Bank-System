@@ -4,7 +4,6 @@ import com.example.Bank_System_Project.entities.Bank;
 import com.example.Bank_System_Project.services.interfaces.BankService;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Scanner;
 
 public class AuxiliaryFunctions {
@@ -27,19 +26,5 @@ public class AuxiliaryFunctions {
         }
         return true;
     }
-    public boolean selectBank(Scanner scanner){
-        System.out.print("Enter bank ID: ");
-        int bankId = scanner.nextInt();
-        scanner.nextLine();
 
-        Optional<Bank> bankOptional = bankService.findById(bankId);
-        if (bankOptional.isPresent()) {
-            bankService.setCurrentBank(bankOptional.get());
-            System.out.println("Selected bank: " + bankOptional.get().getBankName());
-            return true;
-        } else {
-            System.out.println("Invalid bank ID. Please try again.");
-            return false;
-        }
-    }
 }
