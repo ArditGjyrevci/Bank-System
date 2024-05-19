@@ -1,7 +1,6 @@
 package com.example.Bank_System_Project.entities;
 
 public class ErrorResponse {
-
     private int status;
     private String message;
     private long timeStamp;

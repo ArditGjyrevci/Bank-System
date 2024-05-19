@@ -2,7 +2,6 @@ package com.example.Bank_System_Project.services;
 
 import com.example.Bank_System_Project.daos.TransactionRepository;
 import com.example.Bank_System_Project.entities.Account;
-import com.example.Bank_System_Project.entities.Bank;
 import com.example.Bank_System_Project.entities.Transaction;
 import com.example.Bank_System_Project.services.implementations.TransactionServiceImplementation;
 import com.example.Bank_System_Project.services.interfaces.AccountService;
@@ -13,16 +12,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class TransactionServiceTest {
-
     @Mock
     private TransactionRepository transactionRepository;
 
@@ -74,33 +71,6 @@ public class TransactionServiceTest {
 
         verify(transactionRepository, times(1)).findById(id);
     }
-
-    public void testPerformTransaction() throws Exception {
-
-        Bank bank = new Bank("KosovoBank",BigDecimal.valueOf(10),BigDecimal.valueOf(5));
-        bank.setBankId(1);
-        Account originatingAccount = new Account("Artan",BigDecimal.valueOf(500));
-        originatingAccount.setAccountId(1);
-        originatingAccount.setBank(bank);
-        Account resultingAccount = new Account("Ardit",BigDecimal.valueOf(500));
-        resultingAccount.setAccountId(2);
-        resultingAccount.setBank(bank);
-        LocalDateTime now = LocalDateTime.now();
-        Transaction transaction = new Transaction(BigDecimal.valueOf(100),"Gift",now);
-        transaction.setOriginatingAccount(originatingAccount);
-        transaction.setResultingAccount(resultingAccount);
-
-        transactionService.performTransaction(transaction, true); // Change to true if needed
-
-        assertEquals(BigDecimal.valueOf(390), originatingAccount.getAccountBalance()); // adjust based on transaction logic
-        assertEquals(BigDecimal.valueOf(600), resultingAccount.getAccountBalance()); // adjust based on transaction logic
-        verify(accountService, times(1)).save(originatingAccount);
-        verify(accountService, times(1)).save(resultingAccount);
-        verify(transactionService, times(1)).save(transaction);
-    }
-
-
-
     @Test
     public void testFindAll() {
         List<Transaction> transactionList = new ArrayList<>();
@@ -121,23 +91,22 @@ public class TransactionServiceTest {
         Account account = new Account();
         account.setAccountId(accountId);
 
-        // Create a transaction with both originating and resulting accounts set
         Transaction transaction = new Transaction();
         Account originatingAccount = new Account();
-        originatingAccount.setAccountId(accountId);  // Set the same account ID for testing
+        originatingAccount.setAccountId(accountId);
         Account resultingAccount = new Account();
-        resultingAccount.setAccountId(accountId);    // Set the same account ID for testing
+        resultingAccount.setAccountId(accountId);
         transaction.setOriginatingAccount(originatingAccount);
         transaction.setResultingAccount(resultingAccount);
 
         when(accountService.findById(accountId)).thenReturn(account);
-        when(transactionRepository.findAll()).thenReturn(List.of(transaction));  // Return a list with the test transaction
+        when(transactionRepository.findAll()).thenReturn(List.of(transaction));
 
         List<Transaction> foundTransactions = transactionService.findByAccountId(accountId);
 
         assertNotNull(foundTransactions);
         assertEquals(1, foundTransactions.size());
-        assertEquals(transaction, foundTransactions.get(0));  // Check if the transaction with the correct account IDs is returned
+        assertEquals(transaction, foundTransactions.get(0));
     }
 
 

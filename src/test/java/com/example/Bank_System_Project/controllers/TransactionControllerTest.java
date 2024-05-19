@@ -19,7 +19,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 class TransactionControllerTest {
-
     @Mock
     private TransactionService transactionService;
 
@@ -34,92 +33,70 @@ class TransactionControllerTest {
 
     @Test
     void getAllTransactions() {
-
-
         Transaction transaction1 = new Transaction(BigDecimal.valueOf(100),"Gift", now);
         Transaction transaction2 = new Transaction(BigDecimal.valueOf(100),"Gift", now);
         List<Transaction> transactions = Arrays.asList(transaction1, transaction2);
 
-        // Mock service method
         when(transactionService.findAll()).thenReturn(transactions);
 
-        // Call controller method
         ResponseEntity<List<Transaction>> responseEntity = transactionController.getAllTransactions();
 
-        // Verify
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(transactions, responseEntity.getBody());
     }
 
     @Test
     void getTransactionById() {
-        // Mock data
         Transaction transaction = new Transaction(BigDecimal.valueOf(100),"Gift", now);
 
-        // Mock service method
         when(transactionService.findById(1)).thenReturn(transaction);
 
-        // Call controller method
         ResponseEntity<Transaction> responseEntity = transactionController.getTransactionById(1);
 
-        // Verify
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(transaction, responseEntity.getBody());
     }
 
     @Test
     void createTransaction() {
-        // Mock data
         Transaction transaction = new Transaction(BigDecimal.valueOf(100),"Gift", now);
 
-        // Mock service method
         when(transactionService.save(transaction)).thenReturn(transaction);
 
-        // Call controller method
         ResponseEntity<Transaction> responseEntity = transactionController.createTransaction(transaction);
 
-        // Verify
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
         assertEquals(transaction, responseEntity.getBody());
     }
 
     @Test
     void deleteTransaction() {
-        // Call controller method
         ResponseEntity<Void> responseEntity = transactionController.deleteTransaction(1);
 
-        // Verify
         assertEquals(HttpStatus.NO_CONTENT, responseEntity.getStatusCode());
         verify(transactionService, times(1)).deleteById(1);
     }
 
     @Test
     void performTransaction() throws Exception {
-        // Mock data
         Transaction transaction = new Transaction(BigDecimal.valueOf(100),"Gift", now);
 
-        // Call controller method
         ResponseEntity<Void> responseEntity = transactionController.performTransaction(transaction, false);
 
-        // Verify
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         verify(transactionService, times(1)).performTransaction(transaction, false);
     }
 
     @Test
     void getTransactionsByAccountId() {
-        // Mock data
         Transaction transaction1 = new Transaction(BigDecimal.valueOf(100),"Gift", now);
         Transaction transaction2 = new Transaction(BigDecimal.valueOf(100),"Gift", now);
         List<Transaction> transactions = Arrays.asList(transaction1, transaction2);
 
-        // Mock service method
         when(transactionService.findByAccountId(1)).thenReturn(transactions);
 
-        // Call controller method
         ResponseEntity<List<Transaction>> responseEntity = transactionController.getTransactionsByAccountId(1);
 
-        // Verify
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(transactions, responseEntity.getBody());
     }

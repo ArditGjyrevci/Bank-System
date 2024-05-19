@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Service
 public class BankServiceImplementation implements BankService {
-    private BankRepository bankRepository;
+    private final BankRepository bankRepository;
     private Bank currentBank;
     @Autowired
     public BankServiceImplementation (BankRepository bankRepository)

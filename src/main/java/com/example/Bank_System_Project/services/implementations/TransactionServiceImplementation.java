@@ -15,9 +15,9 @@ import java.util.Optional;
 
 @Service
 public class TransactionServiceImplementation implements TransactionService {
-    private TransactionRepository transactionRepository;
-    private AccountService accountService;
-    private BankService bankService;
+    private final TransactionRepository transactionRepository;
+    private final AccountService accountService;
+    private final BankService bankService;
     @Autowired
     public TransactionServiceImplementation (TransactionRepository transactionRepository, AccountService accountService, BankService bankService)
     {
@@ -43,13 +43,13 @@ public class TransactionServiceImplementation implements TransactionService {
     }
 
     @Override
-    public void performTransaction(Transaction transaction, boolean isFlatFee) throws Exception {
+    public void performTransaction(Transaction transaction, boolean isFlatFee)  {
         Account originatingAccount = accountService.findById(transaction.getOriginatingAccount().getAccountId());
         Account resultingAccount = accountService.findById(transaction.getResultingAccount().getAccountId());
 
-//        if (originatingAccount == null || resultingAccount == null) {
-//            throw new IllegalArgumentException("Invalid account ID(s).");
-//        }
+        if (originatingAccount == null || resultingAccount == null) {
+            throw new IllegalArgumentException("Invalid account ID(s).");
+        }
 
         BigDecimal amount=transaction.getAmount();
 
@@ -84,8 +84,9 @@ public class TransactionServiceImplementation implements TransactionService {
         }
         List<Transaction>transactions=findAll();
         for (Transaction transaction : transactions) {
-            if(transaction.getResultingAccount().getAccountId()==accountId||transaction.getOriginatingAccount().getAccountId()==accountId)
-            System.out.println(transaction);
+            if(transaction.getResultingAccount().getAccountId().equals(accountId)||transaction.getOriginatingAccount().getAccountId().equals(accountId)) {
+                System.out.println(transaction);
+            }
         }
         return transactions;
     }

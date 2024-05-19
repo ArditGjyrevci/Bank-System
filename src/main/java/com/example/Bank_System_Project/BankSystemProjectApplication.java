@@ -1,17 +1,14 @@
 package com.example.Bank_System_Project;
 
-import com.example.Bank_System_Project.user_abilities.BankConsoleApp;
 import com.example.Bank_System_Project.services.interfaces.AccountService;
 import com.example.Bank_System_Project.services.interfaces.BankService;
 import com.example.Bank_System_Project.services.interfaces.TransactionService;
+import com.example.Bank_System_Project.user_abilities.BankConsoleApp;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
-
 
 @SpringBootApplication
-@ComponentScan(basePackages = "com.example.Bank_System_Project")
 public class BankSystemProjectApplication implements CommandLineRunner {
 
 	private final BankService bankService;

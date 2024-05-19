@@ -3,7 +3,6 @@ package com.example.Bank_System_Project.services.implementations;
 import com.example.Bank_System_Project.daos.AccountRepository;
 import com.example.Bank_System_Project.daos.BankRepository;
 import com.example.Bank_System_Project.entities.Account;
-import com.example.Bank_System_Project.entities.Bank;
 import com.example.Bank_System_Project.services.interfaces.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,8 +13,8 @@ import java.util.Optional;
 
 @Service
 public class AccountServiceImplementation implements AccountService {
-    private AccountRepository accountRepository;
-    private BankRepository bankRepository;
+    private final AccountRepository accountRepository;
+    private final BankRepository bankRepository;
     private Account currentAccount;
     @Autowired
     public AccountServiceImplementation(AccountRepository accountRepository, BankRepository bankRepository)
@@ -80,8 +79,6 @@ public class AccountServiceImplementation implements AccountService {
     public void deposit(int accountId, BigDecimal amount, boolean isFlatFee) {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new IllegalArgumentException("Account not found"));
-
-        Bank bank=new Bank();
 
         BigDecimal fee = isFlatFee ? account.getBank().getTransactionFlatFeeAmount() :
                 amount.multiply(account.getBank().getTransactionPercentFeeValue().divide(BigDecimal.valueOf(100)));

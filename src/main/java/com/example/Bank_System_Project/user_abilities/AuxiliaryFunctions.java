@@ -8,7 +8,6 @@ import java.util.Scanner;
 
 public class AuxiliaryFunctions {
     private final BankService bankService;
-
     public AuxiliaryFunctions(BankService bankService) {
         this.bankService = bankService;
     }

@@ -5,26 +5,23 @@ import com.example.Bank_System_Project.daos.BankRepository;
 import com.example.Bank_System_Project.entities.Account;
 import com.example.Bank_System_Project.entities.Bank;
 import com.example.Bank_System_Project.services.implementations.AccountServiceImplementation;
-import com.example.Bank_System_Project.services.interfaces.AccountService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
 class AccountServiceTest {
 
     @Mock
@@ -110,7 +107,6 @@ class AccountServiceTest {
         verify(accountRepository, times(1)).save(account);
     }
 
-
     @Test
     void testDeposit() {
 
@@ -131,5 +127,4 @@ class AccountServiceTest {
         assertEquals(new BigDecimal("1090"), account.getAccountBalance());
         verify(accountRepository, times(1)).save(account);
     }
-
 }
