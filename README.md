@@ -21,10 +21,11 @@ This is a console application for a bank system that manages multiple user accou
 - MySQL
 - Liquibase
 - JUnit 5 for unit testing
+- Maven
 
 ## Installation
 
-1. Clone the repository from GitHub: git clone https://github.com/your-username/bank-system.git
+1. Clone the repository from GitHub: git clone https://github.com/ArditGjyrevci/Bank-System.git
 2. Navigate to the project directory
 3. 3. Configure the MySQL database settings in `application.properties`.
 4. Build the application using Maven
