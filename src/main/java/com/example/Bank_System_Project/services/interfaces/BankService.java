@@ -9,8 +9,9 @@ import java.util.Optional;
 
 public interface BankService {
     Bank save(Bank bank);
-    void updateTransactionAmounts(int bankId, BigDecimal transactionFee, BigDecimal transferAmount);
+    void save(int bankId, BigDecimal transactionFee, BigDecimal transferAmount);
     public Optional<Bank> findById(Integer id);
+    public Bank getBankById(Integer id);
     List<Bank> findAll();
     void deleteById(Integer id);
     public void setCurrentBank(Bank bank);

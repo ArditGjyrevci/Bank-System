@@ -1,6 +1,7 @@
 package com.example.Bank_System_Project.services.implementations;
 
 import com.example.Bank_System_Project.daos.BankRepository;
+import com.example.Bank_System_Project.entities.Account;
 import com.example.Bank_System_Project.entities.Bank;
 import com.example.Bank_System_Project.services.interfaces.BankService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class BankServiceImplementation implements BankService {
     }
 
     @Override
-    public void updateTransactionAmounts(int bankId, BigDecimal transactionFee, BigDecimal transferAmount) {
+    public void save(int bankId, BigDecimal transactionFee, BigDecimal transferAmount) {
         bankRepository.updateTransactionAmounts(bankId, transactionFee, transferAmount);
     }
 
@@ -33,6 +34,18 @@ public class BankServiceImplementation implements BankService {
     public  Optional<Bank> findById(Integer id) {
         Optional<Bank> result = bankRepository.findById(id);
         return result;
+    }
+
+    @Override
+    public Bank getBankById(Integer bankId) {
+        Optional<Bank> result = findById(bankId);
+        Bank bank=null;
+        if(result.isPresent()){
+            bank = result.get();
+        }else{
+            throw new RuntimeException("Did not found service id - "+bankId);
+        }
+        return bank;
     }
 
     @Override

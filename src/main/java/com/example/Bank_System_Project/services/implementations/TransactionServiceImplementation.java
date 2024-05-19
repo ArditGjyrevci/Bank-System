@@ -9,9 +9,7 @@ import com.example.Bank_System_Project.services.interfaces.BankService;
 import com.example.Bank_System_Project.services.interfaces.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -66,7 +64,7 @@ public class TransactionServiceImplementation implements TransactionService {
         resultingAccount.setAccountBalance(resultingAccount.getAccountBalance().add(amount));
 
         Bank bank = originatingAccount.getBank();
-        bankService.updateTransactionAmounts(bank.getBankId(), transactionFee, amount);
+        bankService.save(bank.getBankId(), transactionFee, amount);
 
         accountService.save(originatingAccount);
         accountService.save(resultingAccount);
