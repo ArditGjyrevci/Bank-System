@@ -57,10 +57,10 @@ public class AccountServiceImplementation implements AccountService {
 
     @Override
     public void withdraw(int accountId, BigDecimal amount, boolean isFlatFee) {
+
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new IllegalArgumentException("Account not found"));
 
-        Bank bank=new Bank();
 
         BigDecimal fee = isFlatFee ? account.getBank().getTransactionFlatFeeAmount() :
                 amount.multiply(account.getBank().getTransactionPercentFeeValue().divide(BigDecimal.valueOf(100)));
@@ -96,5 +96,10 @@ public class AccountServiceImplementation implements AccountService {
         accountRepository.save(account);
 
         bankRepository.updateTransactionAmounts(account.getBank().getBankId(), fee, amount);
+    }
+
+    @Override
+    public void setCurrentAccount(Account account) {
+        this.currentAccount = account;
     }
 }

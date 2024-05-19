@@ -47,9 +47,9 @@ public class TransactionServiceImplementation implements TransactionService {
         Account originatingAccount = accountService.findById(transaction.getOriginatingAccount().getAccountId());
         Account resultingAccount = accountService.findById(transaction.getResultingAccount().getAccountId());
 
-        if (originatingAccount == null || resultingAccount == null) {
-            throw new IllegalArgumentException("Invalid account ID(s).");
-        }
+//        if (originatingAccount == null || resultingAccount == null) {
+//            throw new IllegalArgumentException("Invalid account ID(s).");
+//        }
 
         BigDecimal amount=transaction.getAmount();
 

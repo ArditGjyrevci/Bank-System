@@ -11,6 +11,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 
 @SpringBootApplication
+@ComponentScan(basePackages = "com.example.Bank_System_Project")
 public class BankSystemProjectApplication implements CommandLineRunner {
 
 	private final BankService bankService;
