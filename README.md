@@ -27,7 +27,7 @@ This is a console application for a bank system that manages multiple user accou
 
 1. Clone the repository from GitHub: git clone https://github.com/ArditGjyrevci/Bank-System.git
 2. Navigate to the project directory
-3. 3. Configure the MySQL database settings in `application.properties`.
+3. Configure the MySQL database settings in `application.properties`.
 4. Build the application using Maven
 5. Run the application
 
