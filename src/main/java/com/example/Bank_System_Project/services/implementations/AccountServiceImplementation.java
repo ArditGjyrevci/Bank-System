@@ -4,9 +4,7 @@ import com.example.Bank_System_Project.daos.AccountRepository;
 import com.example.Bank_System_Project.daos.BankRepository;
 import com.example.Bank_System_Project.entities.Account;
 import com.example.Bank_System_Project.entities.Bank;
-import com.example.Bank_System_Project.entities.Transaction;
 import com.example.Bank_System_Project.services.interfaces.AccountService;
-import com.example.Bank_System_Project.services.interfaces.BankService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -63,7 +61,6 @@ public class AccountServiceImplementation implements AccountService {
                 .orElseThrow(() -> new IllegalArgumentException("Account not found"));
 
         Bank bank=new Bank();
-
 
         BigDecimal fee = isFlatFee ? account.getBank().getTransactionFlatFeeAmount() :
                 amount.multiply(account.getBank().getTransactionPercentFeeValue().divide(BigDecimal.valueOf(100)));

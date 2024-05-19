@@ -1,7 +1,6 @@
 package com.example.Bank_System_Project.services.implementations;
 
 import com.example.Bank_System_Project.daos.BankRepository;
-import com.example.Bank_System_Project.entities.Account;
 import com.example.Bank_System_Project.entities.Bank;
 import com.example.Bank_System_Project.services.interfaces.BankService;
 import org.springframework.beans.factory.annotation.Autowired;
