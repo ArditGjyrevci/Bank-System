@@ -19,15 +19,18 @@ public class CreateAccountOperation extends BankOperation {
     }
     @Override
     public void execute(Scanner scanner) {
+        try{
         AuxiliaryFunctions auxiliaryFunctions=new AuxiliaryFunctions(bankService);
         auxiliaryFunctions.showBanks(scanner);
-        auxiliaryFunctions.selectBank(scanner);
-        Bank currentBank = bankService.getCurrentBank();
+        System.out.print("Enter bank ID: ");
+        int bankId = scanner.nextInt();
+        scanner.nextLine();
+        Bank currentBank = bankService.getBankById(bankId);
         if (currentBank == null) {
             System.out.println("Error: No bank selected. Please select or create a bank first.");
             return;
         }
-        try{System.out.print("Enter username: ");
+        System.out.print("Enter username: ");
         String username = scanner.nextLine();
         System.out.print("Enter initial balance: ");
         BigDecimal initialBalance = scanner.nextBigDecimal();
